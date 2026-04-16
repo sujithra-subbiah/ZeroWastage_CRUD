@@ -8,13 +8,18 @@ const Item = require('./models/Item');
 const app = express();
 
 // --- MONGODB CONNECTION ---
-mongoose.connect('mongodb://127.0.0.1:27017/zeroWasteDB')
+// Localhost-ku badhula Render Environment Variable use panrom
+const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/zeroWasteDB';
+
+mongoose.connect(mongoURI)
     .then(() => console.log("✅ MongoDB Connected Successfully!"))
     .catch(err => console.log("❌ DB Connection Error:", err));
 
 // --- MULTER CONFIG ---
 const storage = multer.diskStorage({
-    destination: './public/uploads/',
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Uploads folder root-la irundha idhu okay
+    },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
     }
@@ -23,8 +28,12 @@ const upload = multer({ storage: storage });
 
 // --- MIDDLEWARE & SETTINGS ---
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use('/uploads', express.static('public/uploads'));
+app.set('views', path.join(__dirname, 'views')); // Views folder-ai sariyaa point panna
+
+// Static Files (CSS, JS, Images) fix
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ 
     secret: 'zerowastage-secret', 
@@ -56,7 +65,7 @@ app.post('/signup', (req, res) => {
     res.render('login', { error: "Account created! Please Login." });
 });
 
-// 3. LOGIN LOGIC (Fixed & Debugged)
+// 3. LOGIN LOGIC
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     
@@ -68,14 +77,13 @@ app.post('/login', (req, res) => {
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
         req.session.user = user.username;
-        console.log("Session User Set:", req.session.user); // Terminal-la check panna
         res.redirect('/marketplace');
     } else {
         res.render('login', { error: "Invalid details. Sign up first!" });
     }
 });
 
-// 4. MARKETPLACE (With Search & Category Filter)
+// 4. MARKETPLACE
 app.get('/marketplace', async (req, res) => {
     try {
         if (!req.session.user) return res.redirect('/');
@@ -84,11 +92,9 @@ app.get('/marketplace', async (req, res) => {
         const category = req.query.category || "";
 
         let queryObj = {};
-
         if (search !== "") {
             queryObj.title = { $regex: search, $options: 'i' };
         }
-
         if (category !== "") {
             queryObj.category = category;
         }
@@ -103,7 +109,7 @@ app.get('/marketplace', async (req, res) => {
 
     } catch (err) {
         console.error("Search Error:", err);
-        res.status(500).send("Marketplace page-la search work aagala!");
+        res.status(500).send("Marketplace error");
     }
 });
 
@@ -113,12 +119,11 @@ app.get('/add', (req, res) => {
     res.render('add-item');
 });
 
-// 6. SAVE ITEM TO DB (Direct-ah session user-ai edukkira logic)
+// 6. SAVE ITEM TO DB
 app.post('/add', upload.single('image'), async (req, res) => {
     try {
         const newItem = new Item({
             title: req.body.title,
-            // Direct-ah login panna user name-ai poduvom
             sellerName: req.session.user || "Verified Seller", 
             price: req.body.price,
             description: req.body.description,
@@ -127,7 +132,6 @@ app.post('/add', upload.single('image'), async (req, res) => {
             address: `${req.body.address}, ${req.body.city}` 
         });
         await newItem.save(); 
-        console.log("Item saved by:", newItem.sellerName); // Terminal check
         res.redirect('/marketplace');
     } catch (err) {
         console.error(err);
@@ -143,7 +147,7 @@ app.get('/details/:id', async (req, res) => {
         if (!item) return res.redirect('/marketplace');
         res.render('details', { item: item }); 
     } catch (err) {
-        res.status(500).send("Details page load aagala.");
+        res.status(500).send("Details page error");
     }
 });
 
@@ -155,7 +159,7 @@ app.get('/buy/:id', async (req, res) => {
         if (!item) return res.redirect('/marketplace');
         res.render('checkout', { item: item, user: req.session.user });
     } catch (err) {
-        res.status(500).send("Checkout page load aagala!");
+        res.status(500).send("Checkout error");
     }
 });
 
@@ -173,7 +177,7 @@ app.post('/confirm-purchase', async (req, res) => {
             </div>
         `);
     } catch (err) {
-        res.status(500).send("Order process aagala.");
+        res.status(500).send("Order error");
     }
 });
 
@@ -194,9 +198,10 @@ app.get('/logout', (req, res) => {
 });
 
 // --- SERVER START ---
-const PORT = 3000;
+// Render automatically provides a PORT, else use 3000
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`-------------------------------------------`);
-    console.log(`Authorized ZeroWastage Live: http://localhost:${PORT}`);
+    console.log(`ZeroWastage Live on Port: ${PORT}`);
     console.log(`-------------------------------------------`);
 });
