@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <title>ZeroWastage | Access</title>
+
+</head>
+
+<body class="access-page">
+
+
+
+    <div class="access-container">
+
+        <div class="brand-header">
+
+            <h2 class="logo">♻️ ZERO WASTAGE</h2>
+
+            <p class="tagline">Sustainable living starts here</p>
+
+        </div>
+
+       
+
+        <% if(error) { %>
+
+            <div class="error-box">
+
+                <%= error %>
+
+            </div>
+
+        <% } %>
+
+
+
+        <div id="loginForm" class="auth-box">
+
+            <h3>Sign In</h3>
+
+            <form action="/login" method="POST">
+
+                <div class="input-group">
+
+                    <label>Username</label>
+
+                    <input type="text" name="username" placeholder="Enter your username" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Password</label>
+
+                    <input type="password" name="password" placeholder="••••••••" required>
+
+                </div>
+
+                <button type="submit" class="btn-primary">SIGN IN</button>
+
+            </form>
+
+            <p class="toggle-text">
+
+                New here? <a href="#" onclick="toggleForm()">Create Account</a>
+
+            </p>
+
+        </div>
+
+
+
+        <div id="signupForm" class="auth-box" style="display: none;">
+
+            <h3>Create Account</h3>
+
+            <form action="/signup" method="POST">
+
+                <div class="input-group">
+
+                    <label>Username</label>
+
+                    <input type="text" name="username" placeholder="Username" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Email</label>
+
+                    <input type="email" name="email" placeholder="Email Address" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Password</label>
+
+                    <input type="password" name="password" placeholder="Create Password" required>
+
+                </div>
+
+                <button type="submit" class="btn-secondary">SIGN UP</button>
+
+            </form>
+
+            <p class="toggle-text">
+
+                Already have an account? <a href="#" onclick="toggleForm()">Sign In</a>
+
+            </p>
+
+        </div>
+
+
+
+        <div class="divider"><span>OR</span></div>
+
+
+
+        <form action="/login" method="POST" class="guest-form">
+
+            <input type="hidden" name="username" value="Guest">
+
+            <button type="submit" class="btn-guest">Continue as Guest</button>
+
+        </form>
+
+    </div>
+
+
+
+    <script>
+
+        function toggleForm() {
+
+            const login = document.getElementById('loginForm');
+
+            const signup = document.getElementById('signupForm');
+
+            if (login.style.display === "none") {
+
+                login.style.display = "block";
+
+                signup.style.display = "none";
+
+            } else {
+
+                login.style.display = "none";
+
+                signup.style.display = "block";
+
+            }
+
+        }
+
+    </script>
+<% if (error) { %>
+    <script>
+        alert("<%= error %>");
+    </script>
+<% } %>
+</body>
+
+</html> 

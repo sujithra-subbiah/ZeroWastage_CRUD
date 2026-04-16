@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Checkout | ZeroWastage</title>
+</head>
+<body style="background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Segoe UI', sans-serif; padding: 20px;">
+
+    <div class="checkout-container" style="width: 100%; max-width: 500px; background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);">
+        
+        <header style="margin-bottom: 30px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; text-align: center;">
+            <h2 style="color: var(--text); margin-bottom: 8px; font-size: 1.8rem;">Confirm Purchase</h2>
+            <p style="color: var(--text-light); font-size: 0.95rem;">Review your order and finalize details.</p>
+        </header>
+
+        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; border: 1px solid #e2e8f0;">
+            <div style="width: 80px; height: 80px; background: white; border-radius: 10px; overflow: hidden; border: 1px solid #cbd5e1; flex-shrink: 0;">
+                <img src="/uploads/<%= item.image %>" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Item Details</p>
+                <h3 style="color: var(--text); font-size: 1.1rem; margin: 0;"><%= item.title %></h3>
+                <p style="color: var(--success); font-weight: 800; font-size: 1.3rem; margin-top: 5px;">₹<%= item.price %></p>
+            </div>
+        </div>
+
+        <form action="/confirm-purchase" method="POST">
+            <input type="hidden" name="itemId" value="<%= item._id %>">
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #475569;">Full Name</label>
+                <input type="text" name="customerName" placeholder="Your name" required 
+                    style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 1rem;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #475569;">Phone Number</label>
+                <input type="tel" name="phone" placeholder="Enter 10-digit mobile number" required
+                    style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 1rem;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #475569;">Shipping Address</label>
+                <textarea name="address" placeholder="Enter your full delivery address" rows="3" required
+                    style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 1rem; resize: none;"></textarea>
+            </div>
+            
+            <div style="margin-top: 35px;">
+                <button type="submit" class="btn btn-buy" style="width: 100%; padding: 18px; font-size: 1.1rem; font-weight: 700; cursor: pointer; border-radius: 10px; transition: transform 0.2s;">
+                    CONFIRM & PLACE ORDER
+                </button>
+                
+                <a href="/details/<%= item._id %>" style="display: block; text-align: center; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                    ← Cancel and Go Back
+                </a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

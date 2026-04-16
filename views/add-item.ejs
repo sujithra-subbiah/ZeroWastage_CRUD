@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <title>Sell Item | Zero Waste</title>
+
+</head>
+
+<body style="background: var(--bg); padding-bottom: 50px;">
+
+    <nav>
+
+        <a href="/marketplace" class="logo">♻️ ZERO WASTE</a>
+
+        <a href="/marketplace" style="text-decoration: none; color: var(--accent); font-weight: bold;">← Back</a>
+
+    </nav>
+
+
+
+    <div class="container" style="max-width: 550px; margin-top: 40px;">
+
+        <h2 style="text-align: center; margin-bottom: 25px; color: var(--text);">List Your Product</h2>
+
+       
+
+        <form action="/add" method="POST" enctype="multipart/form-data" class="card" style="padding: 30px; border: 1px solid var(--border);">
+
+           
+
+            <label>Product Name</label>
+
+            <input type="text" name="title" placeholder="e.g. iPhone 14, Wooden Table" required>
+
+
+
+            <label>Price (₹)</label>
+
+            <input type="number" name="price" placeholder="Enter amount" required>
+
+
+
+            <label>Category</label>
+
+            <select name="category" required>
+
+                <option value="" disabled selected>Select Category</option>
+
+                <option value="Electronics">Electronics</option>
+
+                <option value="Mobile">Mobile Phones</option>
+
+                <option value="Furniture">Furniture</option>
+
+                <option value="Books">Books</option>
+
+                <option value="Appliances">Home Appliances</option>
+
+                <option value="Others">Others</option>
+
+            </select>
+
+
+
+            <label>Description</label>
+
+            <textarea name="description" placeholder="Condition of the item, age, etc." rows="3" required></textarea>
+
+
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
+
+
+
+            <label>Your Name</label>
+
+            <div class="form-group">
+    <label>Your Name (Seller)</label>
+    <input type="text" name="sellerName" placeholder="Enter your name" required>
+</div>
+
+
+
+            <label>WhatsApp Number (without +91)</label>
+
+            <input type="tel" name="phone" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
+
+
+
+            <label>Street / Area</label>
+
+            <input type="text" name="address" placeholder="e.g. Perumal Koil Street, Palayamkottai" required>
+
+
+
+
+
+<label for="city">City</label>
+
+<input list="cities" name="city" id="city" placeholder="Search or type your city...">
+
+
+
+<datalist id="cities">
+
+    <option value="Chennai">
+
+    <option value="Coimbatore">
+
+    <option value="Madurai">
+
+    <option value="Tiruchirappalli">
+
+    <option value="Salem">
+
+    <option value="Tirunelveli">
+
+    <option value="Tiruppur">
+
+    <option value="Erode">
+
+    <option value="Vellore">
+
+    <option value="Thoothukudi">
+
+    <option value="Ariyalur">
+
+    <option value="Chengalpattu">
+
+    <option value="Chidambaram">
+
+    <option value="Dharmapuri">
+
+    <option value="Dindigul">
+
+    <option value="Hosur">
+
+    <option value="Kallakurichi">
+
+    <option value="Kancheepuram">
+
+    <option value="Kanniyakumari">
+
+    <option value="Karur">
+
+    <option value="Krishnagiri">
+
+    <option value="Kumbakonam">
+
+    <option value="Mayiladuthurai">
+
+    <option value="Nagapattinam">
+
+    <option value="Nagercoil">
+
+    <option value="Namakkal">
+
+    <option value="Nilgiris">
+
+    <option value="Ooty">
+
+    <option value="Perambalur">
+
+    <option value="Pudukkottai">
+
+    <option value="Ramanathapuram">
+
+    <option value="Ranipet">
+
+    <option value="Sivaganga">
+
+    <option value="Tenkasi">
+
+    <option value="Thanjavur">
+
+    <option value="Theni">
+
+    <option value="Thiruvallur">
+
+    <option value="Thiruvarur">
+
+    <option value="Tirupattur">
+
+    <option value="Tiruvannamalai">
+
+    <option value="Udhagamandalam">
+
+    <option value="Viluppuram">
+
+    <option value="Virudhunagar">
+
+    <option value="Pollachi">
+
+    <option value="Karaikudi">
+
+    <option value="Neyveli">
+
+    <option value="Rajapalayam">
+
+    <option value="Sivakasi">
+
+</datalist>
+
+            <label style="display:block; margin: 15px 0 5px;">Upload Product Photo</label>
+
+            <input type="file" name="image" id="imageInput" accept="image/*" required
+
+                   style="border: none; padding: 10px 0; background: transparent;"
+
+                   onchange="previewImage(event)">
+
+
+
+            <div id="previewContainer" style="margin-top: 15px; display: none; text-align: center;">
+
+                <p style="font-size: 0.75rem; color: var(--text-light); margin-bottom: 5px;">Image Preview:</p>
+
+                <img id="imagePreview" src="#" alt="Preview"
+
+                     style="max-width: 100%; max-height: 200px; border-radius: 10px; border: 1px solid var(--border); object-fit: contain;">
+
+            </div>
+
+
+
+            <button type="submit" class="btn btn-sell" style="margin-top: 25px; padding: 18px; font-size: 1.1rem; letter-spacing: 1px;">POST PRODUCT NOW</button>
+
+        </form>
+
+    </div>
+
+
+
+    <script>
+
+        function previewImage(event) {
+
+            const reader = new FileReader();
+
+            reader.onload = function() {
+
+                const output = document.getElementById('imagePreview');
+
+                output.src = reader.result;
+
+                document.getElementById('previewContainer').style.display = "block";
+
+            };
+
+            if(event.target.files[0]) {
+
+                reader.readAsDataURL(event.target.files[0]);
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

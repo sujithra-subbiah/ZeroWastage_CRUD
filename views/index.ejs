@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroWastage | Premium Marketplace</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav>
+            <a href="/marketplace" class="logo">♻️ ZERO WASTAGE</a>
+            <div class="nav-links">
+                <% if(typeof user !== 'undefined' && user) { %>
+                    <span class="welcome-text">Welcome, <b><%= user %></b></span>
+                    <a href="/logout" class="logout-link">LOGOUT</a>
+                <% } else { %>
+                    <a href="/" class="btn">LOGIN</a>
+                <% } %>
+            </div>
+        </nav>
+
+        <div class="search-section">
+            <form action="/marketplace" method="GET">
+                <input type="text" name="search" placeholder="Search items..." value="<%= typeof query !== 'undefined' ? query : '' %>">
+            
+                <select name="category">
+                    <option value="">All Categories</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Books">Books</option>
+                    <option value="Appliances">Appliances</option>
+                    <option value="Others">Others</option>
+                </select>
+
+                <button type="submit" class="btn-search">🔍</button>
+            
+                <% if(typeof user !== 'undefined' && user) { %>
+                    <a href="/add" class="btn-sell">SELL ITEMS</a>
+                <% } %>
+            
+                <a href="/marketplace" class="btn-reset">Reset</a>
+            </form>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1>Reduce Waste, Earn Value</h1>
+            <p>The sustainable way to buy and sell pre-loved items</p>
+        </div>
+
+        <div class="grid">
+            <% if(items && items.length > 0) { %>
+                <% items.forEach(item => { %>
+                    <div class="card">
+                        <a href="/details/<%= item._id %>" class="card-image-link">
+                            <div class="card-image">
+                                <img src="/uploads/<%= item.image %>" alt="<%= item.title %>" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            </div>
+                        </a>
+                    
+                        <div class="info">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <p class="price">₹<%= item.price %></p>
+                                <a href="/details/<%= item._id %>" class="details-link">DETAILS →</a>
+                            </div>
+                            <h3><%= item.title %></h3>
+                            <p class="location">📍 <%= item.address %></p>
+                            
+                            <div style="display: flex; gap: 8px; margin-top: 10px;">
+                                <a href="/buy/<%= item._id %>" class="btn btn-buy" style="flex: 1;">BUY NOW</a>
+                                
+                                <% if (typeof user !== 'undefined' && item.sellerName === user) { %>
+                                    <a href="javascript:void(0)" 
+   class="btn-delete" 
+   onclick="confirmDelete('<%= item._id %>', '<%= item.sellerName %>')">
+   🗑️
+</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %> <% } else { %>
+                <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                    <p>No items listed yet.</p>
+                    <a href="/add" class="btn">+ Start Selling</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 ZeroWastage Hub - Sustainable Living in Tamil Nadu</p>
+    </footer>
+
+<script>
+    function confirmDelete(id, seller) {
+        console.log("Delete triggered for:", id);
+        let input = prompt("Security Check: Confirm Seller Name to delete:");
+        
+        if (input === null) return;
+
+        if (input.trim() === seller) {
+            if (confirm("Are you sure?")) {
+                window.location.href = "/delete/" + id;
+            }
+        } else {
+            alert("❌ wrong,you cant delete");
+        }
+    }
+</script>
+</body>
+</html>
